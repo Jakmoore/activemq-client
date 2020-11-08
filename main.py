@@ -1,16 +1,21 @@
-from Listener import Listener
 import socket
 import stomp
+from stomp.listener import PrintingListener
+from ActiveMqListener import ActiveMqListener
 
 def main():
     host_name = socket.gethostname()
     host_ip = socket.gethostbyname(host_name)
     queue = "test_queue"
     conn = stomp.Connection([(host_ip, 61613)])
-    conn.set_listener("", Listener())
-    conn.connect("admin", "admin", wait=True)
-    conn.subscribe(queue, 1)
+    connect_and_subscribe(conn, queue)
     send_message(conn, queue)
+    conn.disconnect()
+
+def connect_and_subscribe(conn, queue):
+    conn.connect("admin", "admin", wait=True)
+    conn.set_listener("", PrintingListener())
+    conn.subscribe(queue, 1, "auto")
 
 def send_message(conn, queue):
     message = "TEST MESSAGE"
