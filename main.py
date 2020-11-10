@@ -1,7 +1,6 @@
 import socket
 import stomp
 import time
-from stomp.listener import PrintingListener
 from ActiveMqListener import ActiveMqListener
 
 def main() -> None:
